@@ -12,7 +12,9 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 
 from pathlib import Path
 import os
+import django
 from django.contrib.messages import constants as messages
+import django_heroku
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -120,7 +122,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
 STATIC_URL = 'static/'
-STATIC_ROOT = BASE_DIR/ 'static'
+STATIC_ROOT = BASE_DIR/'static' 
 
 #added manually
 
@@ -128,6 +130,7 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static")
     
 ]
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR/'media'  
@@ -147,4 +150,5 @@ RAZORPAY_API_SECRET_KEY = "UhV6cSUguXqHPxwA9lcKwXrN"
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+django_heroku.settings(locals())
 
