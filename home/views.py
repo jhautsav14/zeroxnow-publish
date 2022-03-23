@@ -167,7 +167,8 @@ def payment(request):
             return render(request, 'Payment.html', {'status': True})
 
         else:
-            print(Fpath, "is an unknown file format.")
+            return render(request, 'Index.html', {'status': False})     
+     
 
     
 
