@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% block title %}Home
+{% endblock title %}
+{% block body %}
+<br/><br/>
+
+<div class="container">
+  {% if user.is_authenticated %}
+    <!-- Content here -->
+    <div class="container">
+        <div class="row">
+          <div class="col">
+            
+          </div>
+          <div class="col">
+            <form action="{% url 'uploads' %}" method="POST" enctype="multipart/form-data">
+                <input type="text" name="filename" placeholder="Enter file name">
+                <br/>
+                <br/>
+                <input type="file"  name="uploadfiles" required>
+                <br/>
+                <br/>
+                <select class="form-select form-select-lg mb-3" aria-label=".form-select-lg example" name="campus">
+                    <option selected>Select Campus</option required>
+                    <option value="1">HKBK</option>
+                    {% comment %} <option value="2">Two</option>
+                    <option value="3">Three</option> {% endcomment %}
+                </select>
+                  
+            
+                {% csrf_token %}
+                <button type="submit" class="btn btn-outline-primary">Upload</button>
+                {% comment %} <button type="submit">Upload</button> {% endcomment %}
+            </form>
+          </div>
+          <div class="col">
+            
+          </div>
+        </div>
+      </div>
+  
+  </div>
+  {% else %}
+    <!-- Button trigger SignUp modal -->
+    <button type="button" class="btn btn-primary mx-2" data-bs-toggle="modal" data-bs-target="#signupModal">
+      SingUp
+    </button>
+    <!-- Button trigger Login modal -->
+    <button type="button" class="btn btn-primary mx-2" data-bs-toggle="modal" data-bs-target="#loginModal">
+      Login
+    </button>
+  {% endif %}
+
+
+
+
+
+
+
+{% endblock body %}
