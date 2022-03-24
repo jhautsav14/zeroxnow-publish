@@ -14,7 +14,7 @@
           </div>
           <div class="col">
             <form action="{% url 'uploads' %}" method="POST" enctype="multipart/form-data">
-                <input type="text" name="filename" placeholder="Enter file name">
+                
                 <br/>
                 <br/>
                 <input type="file"  name="uploadfiles" required>
@@ -26,6 +26,23 @@
                     {% comment %} <option value="2">Two</option>
                     <option value="3">Three</option> {% endcomment %}
                 </select>
+                <select class="form-select form-select-lg mb-3" aria-label=".form-select-lg example" name="PrintingType">
+                  <option selected>Printing Type(Single-sided)</option required>
+                  <option value="1">Single-sided</option>
+                  <option value="2">Double-sided</option>
+                  {% comment %} <option value="2">Two</option>
+                  <option value="3">Three</option> {% endcomment %}
+                </select>
+
+                <select class="form-select form-select-lg mb-3" aria-label=".form-select-lg example" name="PrintingColor">
+                  <option selected>Printing Colour(Black-White)</option required>
+                  <option value="1">Black-White</option>
+                  <option value="2">Colour</option>
+                  {% comment %} <option value="2">Two</option>
+                  <option value="3">Three</option> {% endcomment %}
+                </select>
+                
+                
                   
             
                 {% csrf_token %}

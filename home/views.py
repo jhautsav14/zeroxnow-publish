@@ -1,5 +1,6 @@
 from ast import Str
 from email import message
+from multiprocessing import context
 from django.shortcuts import render ,HttpResponse , redirect
 from . models import uploadfile
 import requests
@@ -30,14 +31,31 @@ def about(request):
     return render(request,'about.html')
 
 def send_files(request):
-    global Fpath , name
+    global Fpath , name , payment_order_id ,printC,printT
     if request.method =="POST" :
-        name = request.POST.get("filename")
+        name = request.user
         myfile = request.FILES.getlist("uploadfiles")
         campus = request.POST.get("campus")
+        PrintingType = request.POST.get("PrintingType")
+        PrintingColor = request.POST.get("PrintingColor")
+        
+        if PrintingType == "2" :
+            printT = "Double-sided"
+        else:
+            printT = "Single-sided"
+        print("------------",printT)
+
+        if PrintingColor == "2" :
+            printC = "Colour"
+        else:
+            printC = "Black-White"
+
+
+
         file_list = []
         print(myfile)
-        print("this is campus",campus)
+        print(name,"this is campus",campus)
+    
         for f in myfile:
             new_file = uploadfile(f_name=name, myfiles=f, campus_name= campus )
             new_file.save()
@@ -118,10 +136,15 @@ def send_files(request):
             
             return render(request,'about.html',{'new_url': file_list , 'page':page ,'cost': cost , "file_name":z ,'api_key':RAZORPAY_API_KEY,'order_id': payment_order_id})
         else:
-            return render(request, 'index.html')
+            messages.error(request, ' Please select Campus')
+            return redirect('/')
+            
 
 def payment(request):
+    
+    
     print(Fpath)
+    
     d= Fpath[-4:]
     response = request.POST
     params_dict = {
@@ -134,21 +157,25 @@ def payment(request):
     # create a Razorpay Client instance
     try:
         status = client.utility.verify_payment_signature(params_dict)
-        print('this is response.......', response)
-        print("--------",d)
+        # print('this is response.......', response)
+        # print("--------",d)
+        #comment on file
+        file_id = [payment_order_id, printT , printC]
 
         
         
         if d == ".jpg" or d== "jpeg":
             file = {'photo':open(Fpath,'rb')}
-            resp = requests.post('https://api.telegram.org/bot5179242020:AAH9IukRSGWFbUiWVFDUJSYhCuzj2NAuHG8/sendPhoto?chat_id=-621048814&caption={}'.format(name),files=file)
+            resp = requests.post('https://api.telegram.org/bot5179242020:AAH9IukRSGWFbUiWVFDUJSYhCuzj2NAuHG8/sendPhoto?chat_id=-621048814&caption={}'.format(file_id),files=file)
             print(resp.status_code)
-            return render(request, 'Payment.html', {'status': True})
+            messages.success(request,"Thanks , your order is getting ready ")
+            return redirect('/', {'status': True})
         elif d == ".png":                
             file = {'photo':open(Fpath,'rb')}
-            resp = requests.post('https://api.telegram.org/bot5179242020:AAH9IukRSGWFbUiWVFDUJSYhCuzj2NAuHG8/sendPhoto?chat_id=-621048814&caption={}'.format(name),files=file)
+            resp = requests.post('https://api.telegram.org/bot5179242020:AAH9IukRSGWFbUiWVFDUJSYhCuzj2NAuHG8/sendPhoto?chat_id=-621048814&caption={}'.format(file_id),files=file)
             print(resp.status_code)
-            return render(request, 'Payment.html', {'status': True})
+            messages.success(request,"Thanks , your order is getting ready ")
+            return redirect('/', {'status': True})
 
         elif d == ".pdf":
 
@@ -162,9 +189,11 @@ def payment(request):
             
             #print(page)
             file = {'document':open(Fpath,'rb')}
-            resp = requests.post('https://api.telegram.org/bot5179242020:AAH9IukRSGWFbUiWVFDUJSYhCuzj2NAuHG8/sendDocument?chat_id=-621048814&caption={}'.format(name),files=file)
+            resp = requests.post('https://api.telegram.org/bot5179242020:AAH9IukRSGWFbUiWVFDUJSYhCuzj2NAuHG8/sendDocument?chat_id=-621048814&caption={}'.format(file_id),files=file)
             print(resp.status_code)
-            return render(request, 'Payment.html', {'status': True})
+            messages.success(request,"Thanks , your order is getting ready ")
+            return redirect('/', {'status': True})
+
 
         else:
             return render(request, 'Index.html', {'status': False})     
@@ -178,6 +207,7 @@ def payment(request):
      
 
 def handleSignup(request):
+    global username
     if request.method == 'POST':
         # Get the Post parameters
         username = request.POST['username']
@@ -192,7 +222,7 @@ def handleSignup(request):
             messages.error(request, "Username must be under 10 characters")
 
             return redirect('/')
-        if not username.isalnum():
+        if not username.isalnum():  
 
             return redirect('/')
             
@@ -245,5 +275,6 @@ def handleLogout(request):
 
 
 def handelOrder(request):
+    
 
     return render(request, 'order.html')
