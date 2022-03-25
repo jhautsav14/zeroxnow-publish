@@ -162,19 +162,19 @@ def payment(request):
         #comment on file
         file_id = [payment_order_id, printT , printC]
 
-        
+        mess = "Thanks , your order is getting ready. Order id : ", payment_order_id
         
         if d == ".jpg" or d== "jpeg":
             file = {'photo':open(Fpath,'rb')}
             resp = requests.post('https://api.telegram.org/bot5179242020:AAH9IukRSGWFbUiWVFDUJSYhCuzj2NAuHG8/sendPhoto?chat_id=-621048814&caption={}'.format(file_id),files=file)
             print(resp.status_code)
-            messages.success(request,"Thanks , your order is getting ready ")
+            messages.success(request,mess)
             return redirect('/', {'status': True})
         elif d == ".png":                
             file = {'photo':open(Fpath,'rb')}
             resp = requests.post('https://api.telegram.org/bot5179242020:AAH9IukRSGWFbUiWVFDUJSYhCuzj2NAuHG8/sendPhoto?chat_id=-621048814&caption={}'.format(file_id),files=file)
             print(resp.status_code)
-            messages.success(request,"Thanks , your order is getting ready ")
+            messages.success(request,mess)
             return redirect('/', {'status': True})
 
         elif d == ".pdf":
@@ -191,7 +191,7 @@ def payment(request):
             file = {'document':open(Fpath,'rb')}
             resp = requests.post('https://api.telegram.org/bot5179242020:AAH9IukRSGWFbUiWVFDUJSYhCuzj2NAuHG8/sendDocument?chat_id=-621048814&caption={}'.format(file_id),files=file)
             print(resp.status_code)
-            messages.success(request,"Thanks , your order is getting ready ")
+            messages.success(request,mess)
             return redirect('/', {'status': True})
 
 
