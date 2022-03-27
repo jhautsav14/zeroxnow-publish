@@ -54,8 +54,8 @@ def send_files(request):
 
 
         file_list = []
-        print(myfile)
-        print(name,"this is campus",name)
+        # print(myfile)
+        # print(name,"this is campus",name)
     
         for f in myfile:
             new_file = uploadfile(f_name=name, myfiles=f, campus_name= campus )
@@ -166,7 +166,7 @@ def payment(request):
         # print('this is response.......', response)
         # print("--------",d)
         #comment on file
-        file_id = [id_o, printT , printC]
+        file_id = [id_o, printT , printC , name]
 
         mess = "Thanks , your order is getting ready. Order id : ", id_o 
         
