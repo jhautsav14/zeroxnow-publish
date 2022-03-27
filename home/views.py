@@ -2,7 +2,7 @@ from ast import Str
 from email import message
 from multiprocessing import context
 from django.shortcuts import render ,HttpResponse , redirect
-from . models import uploadfile
+from . models import uploadfile , Orders
 import requests
 import os
 import PyPDF2
@@ -31,13 +31,14 @@ def about(request):
     return render(request,'about.html')
 
 def send_files(request):
-    global Fpath , name , payment_order_id ,printC,printT
+    global Fpath , name , payment_order_id ,printC,printT , id_o , z , campus
     if request.method =="POST" :
-        name = request.user
+        name = request.POST.get("name")
         myfile = request.FILES.getlist("uploadfiles")
         campus = request.POST.get("campus")
         PrintingType = request.POST.get("PrintingType")
         PrintingColor = request.POST.get("PrintingColor")
+        
         
         if PrintingType == "2" :
             printT = "Double-sided"
@@ -54,7 +55,7 @@ def send_files(request):
 
         file_list = []
         print(myfile)
-        print(name,"this is campus",campus)
+        print(name,"this is campus",name)
     
         for f in myfile:
             new_file = uploadfile(f_name=name, myfiles=f, campus_name= campus )
@@ -63,6 +64,7 @@ def send_files(request):
        
         #send file to telegram
         if campus == '1':
+            campus = "HKBk College of Engineering"
             # dir_list = os.listdir(path)[0]
             # Fpath = os.path.join(path, dir_list)
             c= file_list[0]
@@ -131,6 +133,10 @@ def send_files(request):
             # server order
             order = client.order.create(data=DATA)
             payment_order_id = order['id']
+            #orders database 
+            order_db = Orders(name= name,campus=campus,paymentorder_id= payment_order_id,items_json=z)
+            order_db.save()
+            id_o =order_db.order_id
 
 
             
@@ -160,9 +166,9 @@ def payment(request):
         # print('this is response.......', response)
         # print("--------",d)
         #comment on file
-        file_id = [payment_order_id, printT , printC]
+        file_id = [id_o, printT , printC]
 
-        mess = "Thanks , your order is getting ready. Order id : ", payment_order_id
+        mess = "Thanks , your order is getting ready. Order id : ", id_o 
         
         if d == ".jpg" or d== "jpeg":
             file = {'photo':open(Fpath,'rb')}
@@ -207,7 +213,7 @@ def payment(request):
      
 
 def handleSignup(request):
-    global username
+
     if request.method == 'POST':
         # Get the Post parameters
         username = request.POST['username']
@@ -277,4 +283,4 @@ def handleLogout(request):
 def handelOrder(request):
     
 
-    return render(request, 'order.html')
+    return render(request, 'order.html')        

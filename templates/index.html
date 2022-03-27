@@ -14,9 +14,13 @@
           </div>
           <div class="col">
             <form action="{% url 'uploads' %}" method="POST" enctype="multipart/form-data">
+                <br/>
+                <br/>
+                <div class="form-floating mb-3">
+                  <input type="text" class="form-control" id="floatingInput" placeholder="name" name="name">
+                  <label for="floatingInput">Enter Username</label>
+                </div>
                 
-                <br/>
-                <br/>
                 <input type="file"  name="uploadfiles" required>
                 <br/>
                 <br/>
