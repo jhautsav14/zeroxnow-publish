@@ -152,7 +152,8 @@ def payment(request):
     # print(Fpath)
     
     # d= Fpath[-4:]
-   
+    
+    print(Fpath,d) 
     response = request.POST
     params_dict = {
         'razorpay_payment_id' : response['razorpay_payment_id'],
@@ -210,7 +211,8 @@ def payment(request):
 
     
     except:
-        return render(request, 'help.html', {'status': False})     
+        messages.error(request,"Payment error")
+        return render(request, 'Index.html', {'status': False})     
      
 
 def handleSignup(request):
