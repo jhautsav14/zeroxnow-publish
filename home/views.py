@@ -31,7 +31,7 @@ def about(request):
     return render(request,'about.html')
 
 def send_files(request):
-    global Fpath , name , payment_order_id ,printC,printT , id_o , z , campus
+    global Fpath , name , payment_order_id ,printC,printT , id_o , z , campus , d
     if request.method =="POST" :
         name = request.POST.get("name")
         myfile = request.FILES.getlist("uploadfiles")
@@ -149,9 +149,10 @@ def send_files(request):
 def payment(request):
     
     
-    print(Fpath)
+    # print(Fpath)
     
-    d= Fpath[-4:]
+    # d= Fpath[-4:]
+   
     response = request.POST
     params_dict = {
         'razorpay_payment_id' : response['razorpay_payment_id'],
