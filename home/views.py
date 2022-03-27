@@ -138,6 +138,8 @@ def send_files(request):
             order_db.save()
             id_o =order_db.order_id
 
+            
+
 
             
             return render(request,'about.html',{'new_url': file_list , 'page':page ,'cost': cost , "file_name":z ,'api_key':RAZORPAY_API_KEY,'order_id': payment_order_id})
@@ -168,43 +170,47 @@ def payment(request):
         # print('this is response.......', response)
         # print("--------",d)
         #comment on file
-        file_id = [id_o, printT , printC , name]
+        print(status)
+        if status == True:
+            file_id = [id_o, printT , printC , name]
 
-        mess = "Thanks , your order is getting ready. Order id : ", id_o 
-        
-        if d == ".jpg" or d== "jpeg":
-            file = {'photo':open(Fpath,'rb')}
-            resp = requests.post('https://api.telegram.org/bot5179242020:AAH9IukRSGWFbUiWVFDUJSYhCuzj2NAuHG8/sendPhoto?chat_id=-621048814&caption={}'.format(file_id),files=file)
-            print(resp.status_code)
-            messages.success(request,mess)
-            return redirect('/', {'status': True})
-        elif d == ".png":                
-            file = {'photo':open(Fpath,'rb')}
-            resp = requests.post('https://api.telegram.org/bot5179242020:AAH9IukRSGWFbUiWVFDUJSYhCuzj2NAuHG8/sendPhoto?chat_id=-621048814&caption={}'.format(file_id),files=file)
-            print(resp.status_code)
-            messages.success(request,mess)
-            return redirect('/', {'status': True})
-
-        elif d == ".pdf":
-
-            pdfFileObj = open(Fpath, 'rb')
-            pdfReader = PyPDF2.PdfFileReader(pdfFileObj)
-            page = pdfReader.numPages  # page number
-            # get totalnumber of pages and page numbering in PyPDF2 starts with 0
-            pageObj = pdfReader.getPage(0)
-            pageObj.extractText()
-            pdfFileObj.close()
+            mess = "Thanks , your order is getting ready. Order id : ", id_o 
             
-            #print(page)
-            file = {'document':open(Fpath,'rb')}
-            resp = requests.post('https://api.telegram.org/bot5179242020:AAH9IukRSGWFbUiWVFDUJSYhCuzj2NAuHG8/sendDocument?chat_id=-621048814&caption={}'.format(file_id),files=file)
-            print(resp.status_code)
-            messages.success(request,mess)
-            return redirect('/', {'status': True})
+            if d == ".jpg" or d== "jpeg":
+                file = {'photo':open(Fpath,'rb')}
+                resp = requests.post('https://api.telegram.org/bot5179242020:AAH9IukRSGWFbUiWVFDUJSYhCuzj2NAuHG8/sendPhoto?chat_id=-621048814&caption={}'.format(file_id),files=file)
+                print(resp.status_code)
+                messages.success(request,mess)
+                return redirect('/', {'status': True})
+            elif d == ".png":                
+                file = {'photo':open(Fpath,'rb')}
+                resp = requests.post('https://api.telegram.org/bot5179242020:AAH9IukRSGWFbUiWVFDUJSYhCuzj2NAuHG8/sendPhoto?chat_id=-621048814&caption={}'.format(file_id),files=file)
+                print(resp.status_code)
+                messages.success(request,mess)
+                return redirect('/', {'status': True})
+
+            elif d == ".pdf":
+
+                pdfFileObj = open(Fpath, 'rb')
+                pdfReader = PyPDF2.PdfFileReader(pdfFileObj)
+                page = pdfReader.numPages  # page number
+                # get totalnumber of pages and page numbering in PyPDF2 starts with 0
+                pageObj = pdfReader.getPage(0)
+                pageObj.extractText()
+                pdfFileObj.close()
+                
+                #print(page)
+                file = {'document':open(Fpath,'rb')}
+                resp = requests.post('https://api.telegram.org/bot5179242020:AAH9IukRSGWFbUiWVFDUJSYhCuzj2NAuHG8/sendDocument?chat_id=-621048814&caption={}'.format(file_id),files=file)
+                print(resp.status_code)
+                messages.success(request,mess)
+                return redirect('/', {'status': True})
 
 
-        else:
-            return render(request, 'Index.html', {'status': False})     
+            else:
+                messages.error(request,"Payment error")
+                return render(request, 'Index.html', {'status': False})   
+          
      
 
     
@@ -285,5 +291,7 @@ def handleLogout(request):
 
 def handelOrder(request):
     
-
-    return render(request, 'order.html')        
+    return redirect('/')
+   
+    
+       
