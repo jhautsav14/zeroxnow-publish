@@ -9,14 +9,17 @@
   <!-- Content here -->
   <div class="container">
     <div class="row">
-      <div class="col"> 
-        {%for url in new_url%}
+      {% comment %} <div class="col">  {% endcomment %}
+        {% comment %} {%for url in new_url%}
           <img src="{{url}}" width="250" height="250">
-        {%endfor%}      
-      </div>
-      </br>
+        {%endfor%}       {% endcomment %}
+      {% comment %} </div> {% endcomment %}
+    
       <div class="col">
         <div class="mb-3">
+        </br>
+        </br>
+        </br> 
           <label for="exampleFormControlInput1" class="form-label">File name</label>
           <input class="form-control" type="text" value="{{file_name}}" aria-label="readonly input example" readonly>
 
