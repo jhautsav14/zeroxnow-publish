@@ -174,7 +174,7 @@ def payment(request):
         if status == True:
             file_id = [id_o, printT , printC , name]
 
-            mess = "Thanks , your order is getting ready. Order id : ", id_o 
+            mess = "Thanks , your order is getting ready. Order id : ", id_o ,"File name ", z
             
             if d == ".jpg" or d== "jpeg":
                 file = {'photo':open(Fpath,'rb')}
